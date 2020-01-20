@@ -7,7 +7,8 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\RegistersUsers;
-
+use Illuminate\Http\Request;
+use App\Http\Requests\RegisterRequest;
 class RegisterController extends Controller
 {
     /*
@@ -48,10 +49,11 @@ class RegisterController extends Controller
      */
     protected function validator(array $data)
     {
+        info($data);
         return Validator::make($data, [
             'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
-            'password' => ['required', 'string', 'min:8', 'confirmed'],
+            'email' => ['required', 'string', 'email', 'max:255',], //'unique:users'],
+            'password' => ['required', 'string', 'min:8'],
         ]);
     }
 
@@ -61,12 +63,19 @@ class RegisterController extends Controller
      * @param  array  $data
      * @return \App\Models\User
      */
-    protected function create(array $data)
+    protected function create(RegisterRequest $request)
     {
-        return User::create([
-            'name' => $data['name'],
-            'email' => $data['email'],
-            'password' => Hash::make($data['password']),
-        ]);
+        $data = request(['name', 'email', 'password']);
+        $validatedData = $request->validated();
+        if ($validatedData){
+            $user = User::create([
+                'name' => $data['name'],
+                'email' => $data['email'],
+                'password' => Hash::make($data['password']),
+            ]);
+            response()->json($user, 200);
+        }else{
+            return response()->json(['error' => 'Bad request'], 400);
+        }
     }
 }

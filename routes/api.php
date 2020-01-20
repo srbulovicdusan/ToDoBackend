@@ -23,6 +23,7 @@ Route::group([
     Route::post('logout', 'AuthController@logout');
     Route::post('refresh', 'AuthController@refresh');
     Route::post('me', 'AuthController@me');
+    Route::post('registration', 'Auth\RegisterController@create');
 
 });
 //Route::middleware('auth:api')->get('/user', function (Request $request) {

@@ -23,7 +23,6 @@ class AuthController extends Controller
      */
     public function login()
     {
-        error_log('Some message here.');
 
         $credentials = request(['email', 'password']);
 
