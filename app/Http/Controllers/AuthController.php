@@ -20,10 +20,10 @@ class AuthController extends Controller
      */
     public function login()
     {
-
+        error_log("usao u login");
         $credentials = request(['email', 'password']);
         if (!$token = auth()->attempt($credentials)) {
-            abort(400, "Bad request.");
+            abort(400, "Bad requestttt.");
         }
 
         return $this->respondWithToken($token);

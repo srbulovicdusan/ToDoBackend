@@ -43,9 +43,7 @@ class Kernel extends HttpKernel
             'bindings',
             
         ],
-        'auth' =>[
-            'auth'
-        ]
+        
     ];
 
     /**
