@@ -49,10 +49,9 @@ class RegisterController extends Controller
      */
     protected function validator(array $data)
     {
-        info($data);
         return Validator::make($data, [
             'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255',], //'unique:users'],
+            'email' => ['required', 'string', 'email', 'max:255',],
             'password' => ['required', 'string', 'min:8'],
         ]);
     }
@@ -69,24 +68,24 @@ class RegisterController extends Controller
         $validatedData = $request->validated();
         if ($validatedData){
             $user = User::create([
-                'name' => $data['name'],
-                'email' => $data['email'],
-                'password' => Hash::make($data['password']),
+                'name' => $validatedData['name'],
+                'email' => $validatedData['email'],
+                'password' => Hash::make($validatedData['password']),
             ]);
             //log in user after registration
-            $credentials = ['email'=>$request->email, 'password'=>$request->password];
+            $credentials = ['email'=> $validatedData['email'], 'password'=> $validatedData['password']];
             $token = auth()->attempt($credentials);
             return $this->respondWithToken($token);
         }else{
-            return response()->json(['error' => 'Bad request'], 400);
+            abort(400, 'Bad request.');
         }
     }
     protected function respondWithToken($token)
     {
         return response()->json([
             'access_token' => $token,
-            'token_type' => 'bearer',
-            'expires_in' => auth()->factory()->getTTL() * 60
+            'token_type' => 'bearer'
+            
         ]);
     }
 }
