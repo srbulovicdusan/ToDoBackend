@@ -2,15 +2,20 @@
 
 namespace App\Http\Controllers;
 
+use App\Services\TodoService;
 use App\Models\Todos;
 use Illuminate\Http\Request;
 
 class TodoController extends Controller
 {
+    public function __construct(TodoService $todoService)
+    {
+        $this->service = $todoService;
+    }
     
-    public function all(Request $request){
-        $user = auth()->user();
-        return response()->json($user->todos);
+    public function getAllUserTodos(Request $request){
+        $todos = $this->service->getAll();
+        return response()->json($todos);
     }
     /**
      * Store a newly created resource in storage.
@@ -20,16 +25,9 @@ class TodoController extends Controller
      */
     public function store(Request $request)
     {
-        $user = auth()->user();
-        $validatedData = request(['title', 'description', 'priority', 'completed']);
-        $todo = Todos::create([
-            'title' => $validatedData['title'],
-            'description' => $validatedData['description'],
-            'priority' => $validatedData['priority'],
-            'completed' => $validatedData['completed'],
-            'user_id' => $user->id
-        ]);
-        return response()->json($todo);
+        $todo = request(['title', 'description', 'priority', 'completed']);
+        $createdTodo = $this->service->create($todo);
+        return response()->json($createdTodo, 200);
     }
     /**
      * Show the form for editing the specified resource.
@@ -40,17 +38,9 @@ class TodoController extends Controller
     public function edit(Request $request)
     {
         $data = request(['id', 'title', 'description', 'priority', 'completed']);
-        $todo = Todos::find($data['id']);
-        if ($todo != null){
-            $todo->title = $data['title'];
-            $todo->description = $data['description'];
-            $todo->completed = $data['completed'];
-            $todo->priority = $data['priority'];
-            $todo->save();
-        }
+        $todo = $this->service->update($data);
+        return response()->json($todo, 200);
     }
-
-
     /**
      * Remove the specified resource from storage.
      *
@@ -59,11 +49,10 @@ class TodoController extends Controller
      */
     public function destroy(Request $request)
     {  
-        $data = request(['id']);
-        $todo = Todos::find($data['id']);
-        if ($todo != null){
-            $todo->delete();
+        $id = $request->id;
+        $id = $this->service->delete($id);
+        if ($id == null){
+            abort("Todo not found", 404);
         }
-
     }
 }

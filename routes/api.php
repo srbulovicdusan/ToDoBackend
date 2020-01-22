@@ -31,6 +31,6 @@ Route::group([
     ], function($router){
 Route::post('todo', 'TodoController@store');
 Route::put('todo', 'TodoController@edit');
-Route::delete('todo', 'TodoController@destroy');
-Route::get('todo', 'TodoController@all');
+Route::delete('todo/{id}', 'TodoController@destroy');
+Route::get('todo', 'TodoController@getAllUserTodos');
 });

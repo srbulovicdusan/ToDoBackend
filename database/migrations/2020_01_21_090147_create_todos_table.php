@@ -18,8 +18,8 @@ class CreateTodosTable extends Migration
             $table->string('title');
             $table->string('description');
             
-            $table->enum('priority', ['LOW', 'MEDIUM', 'HIGH']);
-            $table->boolean('completed');
+            $table->enum('priority', ['LOW', 'MEDIUM', 'HIGH'])->default("LOW");
+            $table->boolean('completed')->default(0);
             
             $table->timestamps();
         });
