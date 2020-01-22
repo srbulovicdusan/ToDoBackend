@@ -9,7 +9,4 @@ class Todos extends Model
     protected $guarded = [
         'id'
     ];
-    protected $hidden = [
-        'password'
-    ];
 }

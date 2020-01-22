@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\AddTodoRequest;
+use App\Http\Requests\EditTodoRequest;
 use App\Services\TodoService;
 use App\Models\Todos;
 use Illuminate\Http\Request;
@@ -23,11 +25,13 @@ class TodoController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(AddTodoRequest $request)
     {
-        $todo = request(['title', 'description', 'priority', 'completed']);
+        error_log("asdasdasd");
+        $todo = $request->validated();
+        //$todo = request(['title', 'description', 'priority', 'completed']);
         $createdTodo = $this->service->create($todo);
-        return response()->json($createdTodo, 200);
+        return $createdTodo;
     }
     /**
      * Show the form for editing the specified resource.
@@ -35,7 +39,7 @@ class TodoController extends Controller
      * @param  \App\models\Todos  $todos
      * @return \Illuminate\Http\Response
      */
-    public function edit(Request $request)
+    public function edit(EditTodoRequest $request)
     {
         $data = request(['id', 'title', 'description', 'priority', 'completed']);
         $todo = $this->service->update($data);
