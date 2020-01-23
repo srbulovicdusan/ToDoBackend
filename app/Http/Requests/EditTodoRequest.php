@@ -24,8 +24,8 @@ class EditTodoRequest extends FormRequest
             'id' => 'required|integer',
             'title' => 'required|string|max:255',
             'description' => 'required|string|max:255',
-            'priority' => 'required',
-            'completed' => 'required',
+            'priority' => 'required|in:LOW,MEDIUM,HIGH',
+            'completed' => 'required|boolean',
         ];
     }
 }

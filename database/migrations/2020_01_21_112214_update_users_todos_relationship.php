@@ -26,6 +26,9 @@ class UpdateUsersTodosRelationship extends Migration
      */
     public function down()
     {
-        //
+        Schema::table('todos', function(Blueprint $table){
+            $table->dropForeign(['user_id']);
+            $table->dropColumn('user_id');
+        });
     }
 }

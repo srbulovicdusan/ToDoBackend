@@ -4,22 +4,21 @@ namespace App\Services;
 use App\Models\Todos;
 
 class TodoServiceImpl implements TodoService{
-    public function getAll(){
-        $user = auth()->user();
+
+    public function getAll($user){
         return $user->todos;
     }
-    public function create($todo){
-        $user = auth()->user();
-        $createdTodo = Todos::create([
+
+    public function create($todo, $user){
+        return Todos::create([
             'title' => $todo['title'],
             'description' => $todo['description'],
             'priority' => $todo['priority'],
             'completed' => $todo['completed'],
             'user_id' => $user->id
         ]);
-        return $createdTodo;
-
     }
+
     public function delete($id){
         $todo = Todos::find($id);
         if ($todo != null){
@@ -27,8 +26,8 @@ class TodoServiceImpl implements TodoService{
             return $id;
         }
         return null;
-
     }
+
     public function update($todoToEdit){
         $todo = Todos::find($todoToEdit['id']);
         if ($todo != null){
@@ -39,6 +38,6 @@ class TodoServiceImpl implements TodoService{
             $todo->save();
             return $todo;
         }
-
+        return null;
     }
 }
